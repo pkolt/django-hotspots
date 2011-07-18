@@ -323,7 +323,6 @@ class HotspotsManager(object):
         dct_name.update(dct)
         source_name = self.tile_class.template_name % dct_name
         context = {
-            'MAP_KEY': MAP_KEY,
             'source_url': source_url,
             'source_name': source_name,
         }

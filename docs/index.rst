@@ -64,7 +64,14 @@ http://api.yandex.ru/maps/features/hotspots/
 .. code-block:: python
 
     # settings.py
+
+    TEMPLATE_CONTEXT_PROCESSORS = (
+        # ...
+        'hotspots.context_processors.map_key',
+    )
+    
     INSTALLED_APPS = (
+        # ...
         'hotspots',
     )
 
