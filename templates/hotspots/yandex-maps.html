@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Django-hotspots</title>
+    <script src="http://api-maps.yandex.ru/1.1/index.xml?key={{ MAP_KEY }}&modules=hotspots" type="text/javascript"></script>
+    <script type="text/javascript">
+    YMaps.jQuery(function () {
+        var media_url = '{{ MEDIA_URL }}';
+
+        // Создаем и инициализируем карту
+        var map = new YMaps.Map(YMaps.jQuery("#YMapsID")[0]);
+        map.setCenter(new YMaps.GeoPoint(60.597223,56.837992), 12);
+        map.addControl(new YMaps.Zoom());
+        map.addControl(new YMaps.TypeControl());
+        map.addControl(new YMaps.ToolBar());
+        map.addControl(new YMaps.SearchControl());
+        map.enableScrollZoom();
+        
+        // Вспомогательная функция обработки шаблонов
+        function processTemplate (template, tile, zoom, ext) {
+            return template.replace(/%x/ig, tile.getX()).replace(/%y/ig, tile.getY()).replace(/%z/ig, zoom).replace(/%e/ig, ext);
+        }
+
+        // Источник тайлов с отрисованными метками
+        var ds = new YMaps.TileDataSource(media_url+'{{ source_url }}', 1, 0);
+        ds.getTileUrl = function (tileNumber, zoom) {
+            return processTemplate(
+                YMaps.TileDataSource.prototype.getTileUrl.call(this, tileNumber, zoom),
+                tileNumber,
+                zoom,
+                'png'
+            );
+        };
+        // Добавляем слой с отрисованными метками на карту
+        map.addLayer(new YMaps.Layer(ds));
+
+        // Источник тайлов с описаниями активных областей
+        var os = new YMaps.Hotspots.ObjectSource(media_url+'{{ source_url }}', '{{ source_name }}');
+        os.getTileUrl = function (tileNumber, zoom) {
+            return processTemplate(
+                YMaps.Hotspots.ObjectSource.prototype.getTileUrl.call(this, tileNumber, zoom),
+                tileNumber,
+                zoom,
+                'js'
+            );
+        };
+        os.getKey = function (tileNumber, zoom) {
+            return processTemplate(
+                YMaps.Hotspots.ObjectSource.prototype.getKey.call(this, tileNumber, zoom),
+                tileNumber,
+                zoom,
+                ''
+            );
+        };
+        // Добавляем слой активных областей на карту
+        map.addLayer(new YMaps.Hotspots.Layer(os));
+    });
+    </script>
+</head>
+<body>
+    <h1><a href="http://api.yandex.ru/maps/features/hotspots/">Yandex Maps</a></h1>
+    <div id="YMapsID" style="height:600px"></div>
+</body>
+</html>

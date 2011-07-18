@@ -1,0 +1,1 @@
+from hotspots.tests.test import *
