@@ -244,7 +244,7 @@ class HotspotsManager(object):
             self.remove_old_tiles()
         count = 0
         begin = time.time()
-        scale_range = (int(s) for s in xrange(scale[0], scale[1]+1)) if hasattr(scale, '__iter__') else (int(scale),)
+        scale_range = (i for i in xrange(int(scale[0]), int(scale[1])+1)) if hasattr(scale, '__iter__') else (int(scale),)
         for scale in scale_range:
             tiles = {}
             for obj in iterable:
