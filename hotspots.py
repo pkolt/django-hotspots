@@ -234,14 +234,14 @@ class HotspotsManager(object):
     def __init__(self):
         self.base_path = self.get_base_path()
 
-    def remove_old_tiles(self):
+    def remove_tiles(self):
         base_path = self.base_path
         if os.path.exists(base_path):
             shutil.rmtree(base_path)
 
-    def generate_tiles(self, iterable, scale, verbosity=1, remove_old=None):
-        if remove_old:
-            self.remove_old_tiles()
+    def generate_tiles(self, iterable, scale, verbosity=1, no_remove=None):
+        if not no_remove:
+            self.remove_tiles()
         count = 0
         begin = time.time()
         scale_range = (i for i in xrange(int(scale[0]), int(scale[1])+1)) if hasattr(scale, '__iter__') else (int(scale),)

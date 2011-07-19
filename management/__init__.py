@@ -25,7 +25,6 @@ class HotspotsBaseCommand(BaseCommand):
             raise ImproperlyConfigured('Value scale must be a number or a tuple')
         verbosity = int(options.get('verbosity'))
         hotspots_manager = self.hotspots_class()
-        if not options.get('no_remove'):
-            hotspots_manager.remove_old_tiles()
         iterable = self.get_iterable()
-        hotspots_manager.generate_tiles(iterable, self.scale, verbosity=verbosity)
+        no_remove = options.get('no_remove')
+        hotspots_manager.generate_tiles(iterable, self.scale, verbosity=verbosity, no_remove=no_remove)
